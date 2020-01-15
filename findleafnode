@@ -1,0 +1,46 @@
+class node:
+	def __init__(self,val):
+		self.left=None
+		self.right=None
+		self.val=val
+
+root=node(1)
+node2=node(2)
+node3=node(3)
+root.left=node2
+root.right=node3
+root.left.left=node(4)
+root.left.right=node(5)
+root.right.left=node(6)
+root.right.right=node(7)
+
+leaf_nodes=[]
+
+
+def find_leaf(x,path):
+	
+	if x is None:
+		return 0;
+
+	elif x.left is None and x.right is None:
+		path.append(x.val)
+		print(x.val)
+		print(path)
+		leaf_nodes.append(path)
+		return 0
+	else:
+		path.append(x.val)
+		print(x.val)
+		print(path)
+		find_leaf(x.left,path)
+		find_leaf(x.right,path)
+
+def call_find():
+	path=[]
+	find_leaf(root,path)
+call_find()
+
+
+for i in leaf_nodes:
+	for j in i:
+		print(j)
