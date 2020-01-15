@@ -1,0 +1,43 @@
+class node:
+	def __init__(self,val):
+		self.left=None
+		self.right=None
+		self.val=val
+
+root=node(1)
+node2=node(2)
+node3=node(3)
+root.left=node2
+root.right=node3
+root.left.left=node(4)
+root.left.right=node(5)
+root.right.left=node(6)
+root.right.right=node(7)
+
+def insert(root,node):
+	if(root is None):
+		root=node
+	elif (root.val<node.val):
+		if(root.right is None):
+			root.right=node
+		else:
+			insert(root.right,node)
+	
+	else:
+		if(root.left is None):
+			root.left=node
+		else:
+			insert(root.left,node)
+					
+
+
+nodex=node(8)
+insert(root,nodex)
+
+def pre_ord(root):
+	if(root is None):
+		return
+	pre_ord(root.left)
+	print(root.val)
+	pre_ord(root.right)
+pre_ord(root)
