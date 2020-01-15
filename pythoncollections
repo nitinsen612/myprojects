@@ -1,0 +1,78 @@
+from collections import namedtuple
+
+student1=namedtuple('student1','name,age,marks');
+
+l1=[["raj",22,200],["shek",25,300],["vija",29,250]]
+for s1 in map(student1._make,l1):
+	print(type(s1))
+	print(getattr(s1,'name'))
+#print(type(s1))
+#print(s1)
+#s2=s1._replace(name="chirag")
+
+#print(s2)
+
+d1={"name":"raj","age":22,"marks":300}
+print(d1)
+
+p1=student1(**d1)
+print(p1)
+'''
+'''
+from collections import Counter
+
+c=Counter('nitin sen')
+#print(c)
+#print(c['n'])
+
+d=Counter([9,9,2,8,4,5,2,6,4,9])
+d[9]=0
+print(list(d.elements()))
+
+e=Counter((2,3,4,1,2,8,99,6,5,9,0))
+
+#print(e)
+'''
+'''
+from collections import deque
+
+d1=deque([2,4,1,5])
+#print(d1)
+d1.append('a')
+d1.appendleft('b')
+d1.pop()
+d1.popleft()
+print(d1)
+'''
+'''
+from collections import defaultdict
+
+d1=defaultdict(int)
+d1['a']=1
+d1['b']=2
+print(d1)
+print(d1['c'])
+print(d1)
+d2={'a':1,'b':2}
+print(d2)
+'''
+'''
+from collections import OrderedDict
+
+d1=OrderedDict()
+d1['a']=1
+d1['b']=2
+d1['c']=3
+d1['d']=4
+d1['e']=5
+d1['f']=6
+print(d1)
+
+d2=dict()
+d2['a']=1
+d2['b']=2
+d2['c']=3
+d2['d']=4
+d2['e']=5
+d2['f']=6
+print(d2)
