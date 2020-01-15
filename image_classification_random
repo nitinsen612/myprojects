@@ -1,0 +1,350 @@
+%python
+
+######################## LIBRARY IMPORTING BLOCK #####################################
+
+# Deep NN - CovNet Model building Template using using Tensorflow and Keras
+# RANDOM INITIALIZATION TECHNIQUE
+# Importing the Frequently used libraries for Deep NN - CovNet Model building
+# All libraries needed to be used in the program are initialized here
+
+# Set __IS_LOCAL_RUN__ variable to TRUE, if script is needed to be executed in the current zeppelin notebook for unit testing purpose
+# Set this variable to FALSE, post unit testing the script to make it ready for the training phase
+
+__IS_LOCAL_RUN__ = False
+
+import numpy as np
+from scipy import *
+import os
+import keras
+import matplotlib.pyplot as plt
+import argparse
+import tensorflow as tf
+from tensorflow.python.framework import ops
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, BatchNormalization
+from keras.layers import Activation, Dropout, Flatten, Dense
+from keras import backend as K
+from keras import optimizers
+from keras.callbacks import TensorBoard, LearningRateScheduler, ModelCheckpoint
+from visualdl import LogWriter
+
+
+# import scipy
+# import cv2
+# from tensorflow.python.saved_model import builder as saved_model_builder
+# from tensorflow.python.saved_model import tag_constants
+# from tensorflow.python.lib.io import file_io
+
+if __IS_LOCAL_RUN__:
+
+    batch_size = 32
+    epoch = 1
+    optimizer_func = 'Adam'
+    loss_func = 'categorical_crossentropy'
+    dataset_dir = '/mnt/ai/shared/datasets/drone_dataset/'
+    export_path_base = '/mnt/ai/shared/zeppelin_local_run/95:2/47:0/1536647579869'
+    tensorboard_dir = '/mnt/ai/shared/tensorboard/95:2/47:0/1536647579869'
+    model_checkpoint_dir = '/mnt/ai/shared/models_repo/saved_model/keras/local_predict'
+    visualdl_dir = '/mnt/ai/shared/models_repo/visual_dl_event/95:2/47:0/tj99999999999999999/visual_dl'
+    summary_log_dir = '/mnt/ai/shared/models_repo/summary_log/95:2/47:0/tj99999999999999999'
+    is_gpu = False
+
+else:
+
+    # Arguments for the model execution
+    parser = argparse.ArgumentParser(description='custom 2D convolution for insulator classification')
+
+    parser.add_argument('--batch_size', type=int, default=32)
+    parser.add_argument('--epoch', type=int, default=50)
+    parser.add_argument('--optimizer_func', type=str, required=True, default='',
+                        help='optimizer function for the model')
+    parser.add_argument('--loss_func', type=str, required=True, default='', help='loss function for the model')
+    parser.add_argument('--dataset_dir', type=str, required=True, default='', help='data directory')
+    parser.add_argument('--export_path_base', type=str, required=True, default='', help='export directory')
+    parser.add_argument('--tensorboard_dir', type=str, required=True, default='', help='tensorboard directory')
+    parser.add_argument('--model_checkpoint_dir', type=str, required=True,
+                        default='/mnt/ai/shared/models_repo/saved_model/keras/local_predict',
+                        help='model checkpoint directory')
+    parser.add_argument('--visualdl_dir', type=str, required=True, default='', help='visual-dl directory')
+    parser.add_argument('--summary_log_dir', type=str, required=True, default='',
+                        help='tensorflow summary writer directory')
+    parser.add_argument('--is_gpu', type=bool, default=False)
+
+    args = parser.parse_args()
+
+    batch_size = args.batch_size
+    epoch = args.epoch
+    optimizer_func = args.optimizer_func
+    loss_func = args.loss_func
+    dataset_dir = args.dataset_dir
+    export_path_base = args.export_path_base
+    tensorboard_dir = args.tensorboard_dir
+    model_checkpoint_dir = args.model_checkpoint_dir
+    visualdl_dir = args.visualdl_dir
+    summary_log_dir = args.summary_log_dir
+    is_gpu = args.is_gpu
+
+
+# for setting per_process_gpu_memory_fraction
+if is_gpu:
+    config = tf.ConfigProto()
+
+    # Don't pre-allocate memory; allocate as-needed
+    config.gpu_options.allow_growth = True
+
+    # Only allow a total of half the GPU memory to be allocated
+    config.gpu_options.per_process_gpu_memory_fraction = 0.5
+
+    # Create a session with the above options specified.
+    K.tensorflow_backend.set_session(tf.Session(config=config))
+
+
+# for reproducibility . value can be edited.
+np.random.seed(7)
+
+####################### DATA DEFINITION BLOCK #####################################
+
+# Defining the Input shape
+# Input image dimensions for the model
+# default values
+img_width, img_height = 224, 224
+# Path where the training and validation datasets are present
+working_directory = dataset_dir
+train_data_dir = working_directory + 'training'
+validation_data_dir = working_directory + 'validation'
+
+####################### DATA PREPROCESSING BLOCK #####################################
+
+# Dataset Pre-processing steps
+# Training data augumentation/generator
+# Configurations can be edited accordingly depending upon requirements
+train_datagen = ImageDataGenerator(
+    # set input mean to 0 over the dataset
+    featurewise_center=False,
+    # set each sample mean to 0
+    samplewise_center=False,
+    # divide inputs by std of the dataset
+    featurewise_std_normalization=False,
+    # divide each input by its std
+    samplewise_std_normalization=False,
+    # apply ZCA whitening
+    zca_whitening=False,
+    # randomly rotate images in the range (degrees, 0 to 180)
+    rotation_range=0,
+    # randomly shift images horizontally (fraction of total width)
+    width_shift_range=0.1,
+    # randomly shift images vertically (fraction of total height)
+    height_shift_range=0.1,
+    # randomly flip images
+    horizontal_flip=True,
+    # randomly flip images
+    vertical_flip=False)
+
+# Testing data augmentation/generator
+# Configurations can be edited accordingly depending upon requirements.
+test_datagen = ImageDataGenerator(
+    # set input mean to 0 over the dataset
+    featurewise_center=False,
+    # set each sample mean to 0
+    samplewise_center=False,
+    # divide inputs by std of the dataset
+    featurewise_std_normalization=False,
+    # divide each input by its std
+    samplewise_std_normalization=False,
+    # apply ZCA whitening
+    zca_whitening=False,
+    # randomly rotate images in the range (degrees, 0 to 180)
+    rotation_range=0,
+    # randomly shift images horizontally (fraction of total width)
+    width_shift_range=0.1,
+    # randomly shift images vertically (fraction of total height)
+    height_shift_range=0.1,
+    # randomly flip images
+    horizontal_flip=True,
+    # randomly flip images
+    vertical_flip=False)
+# Data Generator for the training data
+# This will make the data flow from the training directory
+# The variables values are taken from the above declarations.
+# This code will also perform all the preprocessing and resizing on all the images
+train_generator = train_datagen.flow_from_directory(
+    train_data_dir,
+    target_size=(img_width, img_height),
+    batch_size=batch_size,
+    class_mode='categorical')
+# Data Generator for the testing data # This will make the data flow from the validation directory
+# The variables values are taken from the above declarations.
+# This code will also perform all the preprocessing and resizing on all the images
+testing_generator = test_datagen.flow_from_directory(
+    validation_data_dir,
+    target_size=(img_width, img_height),
+    batch_size=batch_size,
+    class_mode='categorical')
+####################### MODEL ARCHITECTURE BLOCK #####################################
+# Defining variables for Deep NN - ConvNet Model Training
+# default values
+# Total number of training samples present in the train data directory and validation data directory
+nb_train_samples = 941
+# default values
+# Total number of validation samples present in the train data directory and validation data directory
+nb_validation_samples = 234
+
+
+# Learning rate scheduling
+def step_decay(epoch):
+    initial_lrate = 0.1
+    drop = 0.5
+    epochs_drop = 10.0
+    lrate = initial_lrate * math.pow(drop, math.floor((1 + epoch) / epochs_drop))
+    return lrate
+
+
+# Explicitly define the start of the Learning phase by enabling the flag
+# Mandatory
+K.set_learning_phase(1)
+# Model initialization and Layers Building
+# All use case specific layers (Convolution,Maxpooling,Flatten,Merge, Attention, RNN layers et al) are defined here
+if K.image_data_format() == 'channels_first':
+    input_shape = (3, img_width, img_height)
+else:
+    input_shape = (img_width, img_height, 3)
+
+
+model = Sequential()
+model.add(Conv2D(30, (5, 5), input_shape=input_shape, activation='relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(15, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.2))
+model.add(Flatten())
+model.add(Dense(64, activation='relu'))
+model.add(Dense(50, activation='relu'))
+model.add(Dense(5, activation='softmax'))
+
+####################### MODEL COMPILING BLOCK #####################################
+
+model.compile(optimizer=optimizer_func, loss=loss_func, metrics=["accuracy"])
+
+print(model.summary())
+
+if not os.path.exists(model_checkpoint_dir):
+    os.makedirs(model_checkpoint_dir)
+
+# Export Model JSON to checkpoint directory
+model_json = model.to_json()
+
+with open(model_checkpoint_dir + '/model.json', 'w') as model_json_writer:
+    model_json_writer.write(model_json)
+
+%python
+
+
+########################## Visual DL Block #########################################
+# create VisualDL logger
+logger = LogWriter(visualdl_dir, sync_cycle=100)
+
+# mark the components with 'train' label.
+with logger.mode("train"):
+    # create a scalar component called 'scalars/'
+    scalar_keras_train_loss = logger.scalar(
+        "scalars/scalar_keras_insulator_classification_train_loss")
+    image_input = logger.image("images/input", 1)
+    image0 = logger.image("images/image0", 1)
+    image1 = logger.image("images/image1", 1)
+    histogram0 = logger.histogram("histogram/histogram0", num_buckets=50)
+    histogram1 = logger.histogram("histogram/histogram1", num_buckets=50)
+
+train_step = 0
+
+
+class LossHistory(keras.callbacks.Callback):
+
+    def on_batch_end(self, batch, logs={}):
+
+        global train_step
+
+        # Scalar
+        scalar_keras_train_loss.add_record(train_step, logs.get('loss'))
+
+        # get weights for 2 layers
+        W0 = model.layers[0].get_weights()[0]  # 5 * 5 * 3 * 30
+        W1 = model.layers[1].get_weights()[0]  # 3 * 3 * 30 * 15
+
+        weight_array0 = W0.flatten()
+        weight_array1 = W1.flatten()
+
+        # histogram
+        histogram0.add_record(train_step, weight_array0)
+        histogram1.add_record(train_step, weight_array1)
+
+        # image
+        # image_input.start_sampling()
+        # image_input.add_sample([img_width, img_height], )
+        # image_input.finish_sampling()
+
+        image0.start_sampling()
+        image0.add_sample([75, 30], weight_array0)
+        image0.finish_sampling()
+
+        image1.start_sampling()
+        image1.add_sample([270, 15], weight_array1)
+        image1.finish_sampling()
+
+        train_step += 1
+
+
+visualdl_loss_history = LossHistory()
+
+####################### MODEL CALLBACK BLOCK #####################################
+# Defining 'callbacks' variables
+# TensorBoard initialisation for tensorboard visualisation
+tensorboard = keras.callbacks.TensorBoard(log_dir=tensorboard_dir, histogram_freq=0, write_graph=True,
+                                          write_images=True)
+# Scheduling varying lerning rate for model optimization
+lrate = LearningRateScheduler(step_decay)
+# model checkpointing
+checkpointer = ModelCheckpoint(filepath=model_checkpoint_dir + '/weights.h5', verbose=1, save_best_only=True)
+
+callbacks = [visualdl_loss_history, tensorboard, lrate, checkpointer]
+####################### MODEL TRAINING BLOCK #####################################
+# Model Fitting # This will fit the data to the model # This takes the epochs, training data, validation data
+model.fit_generator(
+    train_generator,
+    steps_per_epoch=nb_train_samples // batch_size,
+    epochs=epoch,
+    validation_data=testing_generator,
+    validation_steps=nb_validation_samples // batch_size, callbacks=callbacks)
+####################### MODEL EXPORTING BLOCK #####################################
+
+# Explicitly define the stop of the Learning phase by disabling the flag
+K.set_learning_phase(0)  # Mandatory
+# Define the exporter function and the path to export the servable
+sess = K.get_session()
+# Depends on the number of input variables and output variables
+x = tf.placeholder(tf.float32, shape=(None))
+# Depends on the number of input variables and output variables
+pred = tf.placeholder(tf.float32, shape=(None))
+# Example version, Change it accordingly.
+model_version = "00000002"
+# model_saved is a sample name for saving the model # this is editable accordingly
+path = os.path.join(export_path_base, str(model_version))
+builder = tf.saved_model.builder.SavedModelBuilder(path)
+with tf.Session() as tf_sess:
+    tf_sess.run(tf.global_variables_initializer())
+    print(tf.saved_model.tag_constants.SERVING)
+
+    # Set the logs writer to the tensorflow logs folder
+    summary_writer = tf.summary.FileWriter(summary_log_dir, graph_def=sess.graph_def)
+
+    builder.add_meta_graph_and_variables(
+        tf_sess,
+        [tf.saved_model.tag_constants.SERVING],
+        signature_def_map={
+            "serving_default": tf.saved_model.signature_def_utils.predict_signature_def(
+                # signature alias for the model input
+                inputs={"x": model.input},
+                outputs={"pred": model.output})
+        })
+builder.save()
+print("___TRAINING_COMPLETED___")
