@@ -1,0 +1,46 @@
+class node:
+	def __init__(self,val):
+		self.left=None
+		self.right=None
+		self.val=val
+
+root=node(1)
+node2=node(2)
+node3=node(3)
+root.left=node2
+root.right=node3
+root.left.left=node(4)
+root.left.right=node(5)
+root.right.left=node(6)
+root.right.right=node(7)
+
+def find_right(root,item):
+	temp=root
+	level=[]
+	nodes=[]
+    
+	nodes.append(temp)
+	level=[0]
+	while(len(nodes)>0):
+		c_node=nodes.pop(0)
+		c_level=level.pop(0)	        
+		if(c_node.val==item):			
+			if(len(nodes)==0 or c_level !=level[0]):
+				return 0
+			else:
+				return nodes[0].val
+		if(c_node.left is not None):
+			nodes.append(c_node.left)
+			level.append(c_level+1)
+		if(c_node.right is not None):
+			nodes.append(c_node.right)
+			level.append(c_level+1)
+	return 1
+
+x=find_right(root,5)
+if(x==0):
+	print("No right present")
+elif(x==1):
+	print("item is not present")
+else:
+	print("right node is",x)
