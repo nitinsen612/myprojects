@@ -1,0 +1,33 @@
+class node:
+	def __init__(self,data):
+		self.data=data
+		self.next=None
+
+class LinkedList:
+	def __init__(self):
+		self.head=None
+
+	def printlist(self):
+		temp=self.head;
+		while(temp):
+			print(temp.data);
+			temp=temp.next;
+	def getCount(self):
+		temp=self.head;
+		count=0
+		while(temp):
+			count=count+1;
+		return count;
+	def sortList():
+		
+
+if __name__=='__main__':
+	llist=LinkedList();
+	llist.head=node(1)
+	sec=node(2);
+	third=node(3);
+	llist.head.next=sec;
+	sec.next=third;
+
+	llist.printlist()
+	print("number of nodes ",llist.getCount())
