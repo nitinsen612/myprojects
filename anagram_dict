@@ -1,0 +1,27 @@
+str1='listeni'
+str2='siilenti'
+count1={}
+count2={}
+check=1
+for i in str1:
+	if i in count1:
+		count1[i]=count1[i]+1;
+	else:
+		count1[i]=1
+
+for i in str2:
+	if i in count2:
+		count2[i]=count2[i]+1;
+	else:
+		count2[i]=1
+print(len(count1))
+print(len(count2))
+
+for i in count1:
+	if(count1[i]!=count2[i]):
+		check=0
+		break;
+if(check==0):
+	print("no")
+else:
+	print("yes")
