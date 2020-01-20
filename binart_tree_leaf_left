@@ -1,0 +1,28 @@
+class node:
+	def __init__(self,val):
+		self.left=None
+		self.right=None
+		self.val=val
+
+root=node(1)
+root.left=node(2)
+root.left.left=node(4)
+root.right=node(3)
+root.right.left=node(5)
+root.right.right=node(8)
+root.right.left.left=node(6)
+root.right.left.right=node(7)
+root.right.right.right=node(10)
+root.right.right.left=node(9)
+
+def pleaf(root):
+	if(root is None):
+		return 
+	elif(root.left is None and root.right is None):
+		print(root.val)
+	else:
+		pleaf(root.left)
+		pleaf(root.right)
+
+
+pleaf(root)
