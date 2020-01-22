@@ -1,0 +1,32 @@
+class node:
+	def __init__(self,val):
+		self.left=None
+		self.right=None
+		self.val=val
+
+root=node(1)
+root.left=node(3)
+
+root.right=node(2)
+root.right.left=node(5)
+root.right.right=node(4)
+
+root2=node(1)
+root2.left=node(2)
+
+root2.right=node(3)
+root2.left.left=node(4)
+root2.left.right=node(5)
+
+def check_mirror(a,b):
+	if a is None and b is None:
+		return True
+	if a is None  or b is None:
+		return False
+	if a.val!=b.val:
+		return False
+	else:
+		#print(a.left.val,b.right.val)
+		return(check_mirror(a.left,b.right) and check_mirror(a.right,b.left))
+
+print(check_mirror(root,root2))
