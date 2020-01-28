@@ -1,0 +1,9 @@
+import re
+
+with open('D://office//nodejs programs//email data.txt','r') as f:
+	data=f.read()
+
+lst=re.findall('[a-zA-Z0-9]+@[a-zA-Z0-9.]+',data)
+lst1=re.findall(r'\S+@\S+',data)
+lst2=re.findall(r'\s\d{10}\s',data)
+print(lst2)
