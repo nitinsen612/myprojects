@@ -1,0 +1,17 @@
+import requests
+import json
+'''res=requests.get('https://api.github.com/user', auth=('user', 'pass'))
+a=res.json()
+res=requests.post()
+print(a['message'])
+'''
+
+with open('D://office//nodejs programs//sample.json') as f:
+	data=json.load(f)
+
+print(data)
+
+dic1={'name':'nitin','id':'710909','info':{'sal':'8','comp':'cts'}}
+js=json.dumps(dic1)
+print()
+
