@@ -1,0 +1,56 @@
+class tnode:
+	def __init__(self,data):
+		self.left=None
+		self.right=None
+		self.val=data
+
+root=tnode(10)
+root.left=tnode(12)
+root.right=tnode(15)
+root.left.left=tnode(25)
+root.left.right=tnode(30)
+root.right.left=tnode(36)
+
+class llistnode:
+	def __init__(self,data):
+		self.prev=None
+		self.next=None
+		self.data=data
+
+class linkedlist:
+	def __init__(self,node=None):
+		self.head=node
+	def insert(self,data):
+		#print(data)
+		l1=llistnode(data)
+		if(self.head is None):
+			#print(l1.data)
+			self.head=l1;
+		else:
+			temp=self.head
+			while(temp.next):
+				temp=temp.next
+
+			temp.next=l1
+			l1.prev=temp
+	def plist(self):
+		temp=self.head
+		while(temp):
+			print(temp.data)
+			temp=temp.next
+
+			
+
+
+
+def inorder(root,first):
+	
+	if(root is None):
+		return
+	inorder(root.left,first)
+	first.insert(root.val)
+	inorder(root.right,first)
+
+first=linkedlist();
+inorder(root,first)
+first.plist()
