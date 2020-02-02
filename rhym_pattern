@@ -1,0 +1,40 @@
+word='ssssy'
+
+def rhympat(word):
+	subst='';
+	count=0;
+	for i in word:
+		#print(i)
+		#print(subst)
+		if i in ['a','e','i','o','u','y']:
+			if(count==0):
+				if(i!='y'):
+					subst=subst+i;
+					
+			elif(len(subst)==0):
+				if (not((count==len(word)-1 ) and (i=='y'))):
+					subst=subst+i
+
+			elif(subst[-1] in ['a','e','i','o','u','y'] ):
+				if(count!=len(word)-1):
+					subst=subst+i;
+				elif(i!='y'):
+					subst=subst+i;
+			
+			elif((count==len(word)-1 ) and (i=='y')):
+
+				subst=''
+			else:
+				subst=i
+
+
+		else:
+			if(len(subst)>0):
+				subst=subst+i;
+		count=count+1;
+
+	return subst;
+   
+a=rhympat(word)
+print(a)
+
