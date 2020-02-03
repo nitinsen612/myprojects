@@ -1,0 +1,51 @@
+class ListNode(object):
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+    def print(self,l1):
+    	while l1:
+    		print(l1.val)
+    		l1=l1.next
+
+class Solution(object):
+	
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        num1=self.conv_to_num(l1)
+        num2=self.conv_to_num(l2)
+
+        num3=num1+num2;
+
+        num3=str(num3)
+        l3=ListNode(int(num3[-1]))
+        for i in num3[len(num3)-2: :-1]:
+        	l3.next=ListNode(int(i))
+        	l3=l3.next
+        return l3
+
+        	
+    def conv_to_num(self,l1):
+    	num='';
+    	while l1:
+    		
+    		num=str(l1.val)+num;		
+    		l1=l1.next
+    	
+    	return int(num)
+
+
+l1=ListNode(2)
+l1.next=ListNode(4)
+l1.next.next=ListNode(3)
+
+l2=ListNode(5)
+l2.next=ListNode(6)
+l2.next.next=ListNode(4)
+
+s1=Solution()
+l4=s1.addTwoNumbers(l1,l2)
+l1.print(l4)
