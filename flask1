@@ -1,0 +1,21 @@
+from flask import Flask , request
+
+app=Flask(__name__)
+
+@app.route('/')
+def prin_hello():
+	return "my nam eis initin"
+@app.route('/nitin/<surnam>',methods=['POST','GET'])
+def prin_nitin(surnam):
+	if(request.method=='POST'):
+		print('yes')
+
+@app.route('/sen')
+def prin_sen():
+	return "sen"
+
+
+
+
+if __name__== '__main__':
+	app.run(debug=True)
