@@ -1,0 +1,172 @@
+# Regular expression 
+# List comprehension
+
+# if u want to perform transformation on each eemnt of list 
+
+# l = [10,20,30,40,50,60]
+# l2=[value*value for value in l]
+# print(l2)
+
+
+# for value in l:
+# 	l2.append(value*value)
+# print(l2)
+# l = ["a","bb","abcde",'aa']
+# l2 = [len(value)for value in l]
+# print(l2)
+
+# d = dict(zip(l,l2))
+# print(d)
+# tuple - generator expression
+# dict
+# set  
+
+
+# l = [10,15,23,25,30,45,50]
+# l2 =[value for value in l if value%2==0]
+# print(l2) 
+# l2 = ["Div 2" if value%2==0 else "Div by 5" 
+# if value%5==0 else "Something else" 
+# for value in l]
+# print(l2)
+# every comprehension u can write using for loops
+# every for loop with comprehension - NO 
+
+# l = [(value1,value2)
+# for value1 in range(1,5)
+# for value2 in range(10,15)]
+
+# print(l)
+
+
+# l = [[1,2,3],[4,5,6],[7,8,9]]
+# l2 = [1,2,3,4,5,6,7,8,9]
+# l2 = [for value in range(len(l))]
+
+# l2 = [val1 for value in l for val1 in value]
+# print(l2)
+
+
+
+
+# l2=[]
+# l2=[l2.extend(value)for value in l]
+# print(l2)
+# l = [10,20,30]
+# l.extend([100,200,300])
+# print(l)
+
+
+# [1,2,3,5]
+# [4,5,6,5]
+# [7,8,9,5]
+# [10,11,12,5]
+# [13,14,15,5]
+
+# 1,4,7,10,13
+
+
+
+
+# l = [[1,2,3],[4,5,6],[7,8,9],[10,11,12]]
+# # l2 = [[1,4,7],[2,5,8],[3,6,9]]
+
+# l2 = [val[i][j] for i in range(len(l))
+# for j in range()
+# l2 = [[value[index] for value in l] 
+# for index in range(len(l[0]))]
+# print(l2)
+
+
+# [1,2,3]  1
+# [4,5,6]  4
+# [7,8,9]  7
+
+
+# [1,2,3] 2
+# [4,5,6] 5
+# [7,8,9] 8
+
+# [1,2,3] 3
+# [4,5,6] 6
+# [7,8,9] 9
+
+
+# map
+# filter 
+# lambda :  
+
+# def sqr(num):
+# 	return num*num
+
+# l = [10,20,30,40,50]
+# l2 =list(map(lambda num:num*num,l))
+# print(l2)
+
+# def even(num):
+# 	if num%2==0:
+# 		return "Even"
+# 	else:
+# 		return "Odd"
+
+# l = [10,15,20,25,30,35]
+# l2 = list(filter(lambda num:num%2==0,l))
+# print(l2)
+
+
+# help(filter)
+# for value in l2:
+# 	print(value)
+# f = lambda x,y:x+y
+# print(f(5,4))
+
+# z = "z"
+# f = lambda z:"vowel" if z in'aeiou'else 'consonent'
+# print(f("a"))
+# def val1(x):
+# 	print(x)
+# 	return x[1]
+
+
+# d ={5:50,8:40,3:30,2:20,10:5}
+# print(list(sorted((d.items()))))
+# l = (sorted(d.values(),key=lambda x:x))
+# print(l) 
+
+# itertools
+# generators 
+
+# OOPS 
+
+# s = {1,2,3,4,5,6}
+# s1 = {value*value for value in s}
+# print(s1)
+
+# s = (10,20,30,40,50)
+# s2 = (value*value for value in s)
+# print(s2)
+# print(next(s2))
+# print(next(s2))
+# print(next(s2))
+
+
+
+
+# for value in s2:
+# 	print(value)
+
+# d = {1:10,2:20,3:30,4:40}
+# d1 = {x[0]:x[1]**2 for x in d.items()}
+# print(d1)
+
+# d1 ={} 
+# l1 = keys
+# l2 = values 
+
+# for value in zip(l1,l2):
+# l1 = [10,20,30]
+# l2= [100,200,300]
+
+# for value in zip(l1,l2):
+# 	print(value)
+
