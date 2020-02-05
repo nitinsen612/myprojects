@@ -1,0 +1,143 @@
+# l=[10,20,30,40]
+# l2=l
+# print(id(l),id(l2))
+# l.append(60)
+# print(l,l2)
+# print(id(l),id(l2))
+
+# tuple:
+# immutable - no methods to add update and delete
+# ordered - indexing and slicing 
+# l=[10,20,30]
+# l.append()
+# l.extend()
+# l.insert()
+# t=()
+# print(type(t))
+# help(tuple)
+
+# l=[5,10,20,30,40]
+# for t in enumerate(l):
+# 	print(t)
+
+# indexing 
+# t=(10,20,20,40,40,"Python",20,30,40,50)
+# # print(t[100])
+# # print(t[8:7])
+
+# # t[2] = 100
+# # print(t)
+# # print(t.index(20))
+# # print(t.count(20))
+# # x,y=(10,20)
+# # print(type(x),type(y))
+
+# # l= list(t)
+# # print(l)
+# # t=tuple(l)
+# # print(t)
+
+
+# dict :
+# 1 dict are mutable - methods to add update and delete
+# 2 unordered - no indexing and slicing 
+# 3 keys should be unique
+# # 4 keys should be immutable int flaot tuple str list  
+# d= {"name":"ABC","email":"abc@gmail.com","age":50,"name":"PQR"}
+# # print(d)
+# # print(d["name"])
+
+# d["contactno"]=123456789
+# print(d)
+
+
+# d["contactno"]=444444444
+# print(d)
+
+
+# #d={1:1,2:4,3:9,4:16........ 100}
+
+# d={}
+# for value in range(1,10):
+# 	d[value]= value *value
+# 	# print(d)
+# print(d)
+
+# print(d[5])
+# # print(d.get(500,1))
+# print(d.setdefault(500,20),d)
+
+# delete :
+# r=d.pop(5)
+# print(d,r)
+
+# r=d.popitem()
+# print(d,r)
+# d.clear()
+# print(d)
+
+# del d
+# print(d)
+
+# r=d.popitem()
+# print(d,r)
+
+
+# help(dict.get)
+
+d= {"name":"ABC","email":"abc@gmail.com","age":50,"name":"PQR"}
+
+
+# d={"SoftEngg":20,"networking":30,"c++":70,"c":75,"automobile":85}
+# pass_marks=40
+
+# for x in d:
+# 	if d[x] < pass_marks:
+# 		print(x)
+
+
+# for key,value in d.items():
+# 	if value < pass_marks:
+# 		print(key)
+
+
+
+# for keys in d:
+# 	print(keys,d[keys])
+
+# print(d.keys())
+# print(d.values())
+# print(d.items())
+
+# for x in d.keys():
+# 	print(x)
+
+
+# for x in d.values():
+# 	print(x)
+
+
+# for x in d.items():
+# 	print(x)
+
+# l = [10,20,30,40]
+# d= dict.fromkeys(l,20)
+# print(d)
+
+# l1=[1,2,3,4,5]
+# l2=[1,4,9,15,25]
+# # l3=[100]
+# print(dict(zip(l1,l2)))
+# print(list(zip(l1,l2,l3)))
+
+# d1={1:1,2:4,3:9}
+# d2={4:16,5:25,6:36}
+
+# d1.update(d2)
+# print(d1)
+
+# set
+# math
+# random
+
+
