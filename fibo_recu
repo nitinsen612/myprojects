@@ -1,0 +1,9 @@
+n=5
+def feb(d):
+	if d<=1:
+		return d;
+	else:
+		return(feb(d-1)+feb(d-2))
+
+for i in range(n):
+	print(feb(i))
