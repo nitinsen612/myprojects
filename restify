@@ -1,0 +1,29 @@
+var restify=require("restify")
+
+var server=restify.createServer()
+function response(req,res,next){
+
+	console.log("welcome",req.params.name);
+	res.send('welcome'+req.params.name);
+	next();
+
+}
+server.pre(function(req,res,next){
+	console.log("pre function")
+	next()
+	
+})
+server.use(function(req,res,next){
+	console.log("use function")
+	if(req.params.name=='nitin'){
+		req.params.name='nitin sen'
+	}
+	next();
+
+})
+console.log("first line")
+server.get('/login/:name',response)
+
+server.listen(8085,function(){
+	console.log("listening")
+})
